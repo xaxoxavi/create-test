@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+  <?!= HtmlService.createHtmlOutputFromFile('uiStyle').getContent(); ?>
+  
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+   
+    <script>
+    
+      function onFailure(error) {
+        var div = document.getElementById('output');
+        div.innerHTML = "ERROR: " + error.message;
+      }
+
+     
+    
+      function createForm(){
+      
+          var formName = $('#name').val();
+        
+          var quiz = $('#quiz').is(":checked");
+          var shuffle = $('#shuffle').is(":checked");
+          var authenticated = $('#authenticated').is(":checked");
+          var oneAnswer = $('#one').is(":checked");
+        
+          $('#spinner').show();
+         
+          google.script.run
+            .withFailureHandler(onFailure)
+            .withSuccessHandler(closeDialog)
+            .createForm(formName,quiz, oneAnswer, shuffle, authenticated);
+          
+        
+
+         
+      }
+      
+      function closeDialog() {
+        google.script.host.close();
+      }
+    
+    </script>
+  </head>
+  <body>
+
+    <div id="main">
+    
+      <div id="output"></div>
+      
+      <div id="form-name" class="form-element">
+        <label for="name">Nom del formulari:</label>
+        <input type="text" id="name" value="<?= SpreadsheetApp.getActiveSpreadsheet().getName()?>"/>
+      </div>  
+      
+ 
+      
+      <div id="make-quiz" class="form-element">
+        <input type="checkbox" name="quiz"  id="quiz" value="1" checked/> Donar puntuacions a les resposstes correctes (mode QUIZ)
+      </div>
+      
+      <div id="one-answer" class="form-element">
+        <input type="checkbox" name="one"  id="one" value="1" checked/> Només permetre una resposta per usuari
+      </div>
+      
+      <div id="shuffle-questions" class="form-element">
+        <input type="checkbox" name="shuffle"  id="shuffle" value="1"/> Barrejar les preguntes
+      </div>
+      
+       <div id="authenticated-users" class="form-element">
+        <input type="checkbox" name="authenticated"  id="authenticated" value="1" checked/> Només usuaris autenticats
+      </div>
+      
+      <div class="submit-container">
+      
+        <div id="create-form-btn" class="form-element">
+          <input type="button" class="action" value="Continue" onclick="createForm()" />
+        </div>
+      
+        <div id="spinner" class="hide">
+          <img src="https://loading.io/spinners/comets/index.comet-spinner.gif"/>
+        </div>
+      </div>
+      
+    
+      
+    </div>
+   
+
+  </body>
+</html>
+
+
+
